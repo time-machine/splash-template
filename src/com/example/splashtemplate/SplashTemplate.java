@@ -9,6 +9,10 @@ import org.andengine.engine.options.resolutionpolicy.FillResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.text.Text;
+import org.andengine.entity.util.FPSCounter;
+import org.andengine.opengl.font.Font;
+import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
@@ -16,6 +20,7 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.util.GLState;
 import org.andengine.ui.activity.BaseGameActivity;
 
+import android.graphics.Typeface;
 import android.view.KeyEvent;
 
 public class SplashTemplate extends BaseGameActivity {
@@ -29,6 +34,7 @@ public class SplashTemplate extends BaseGameActivity {
   private BitmapTextureAtlas splashTextureAtlas;
   private ITextureRegion splashTextureRegion;
   private Sprite splash;
+  private Font mFont;
 
   private enum SceneType {
     SPLASH,
@@ -59,6 +65,11 @@ public class SplashTemplate extends BaseGameActivity {
     splashTextureRegion = BitmapTextureAtlasTextureRegionFactory
         .createFromAsset(splashTextureAtlas, this, "splash.png", 0, 0);
     splashTextureAtlas.load();
+
+    mFont = FontFactory.create(this.getFontManager(), this.getTextureManager(),
+        256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32);
+    mFont.load();
+
     pOnCreateResourcesCallback.onCreateResourcesFinished();
   }
 
@@ -72,7 +83,7 @@ public class SplashTemplate extends BaseGameActivity {
   @Override
   public void onPopulateScene(Scene pScene,
       OnPopulateSceneCallback pOnPopulateSceneCallback) throws Exception {
-    mEngine.registerUpdateHandler(new TimerHandler(3f, new ITimerCallback() {
+    mEngine.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback() {
       @Override
       public void onTimePassed(final TimerHandler pTimerHandler) {
         mEngine.unregisterUpdateHandler(pTimerHandler);
@@ -110,6 +121,22 @@ public class SplashTemplate extends BaseGameActivity {
     // load your game here, your scenes
     mainScene = new Scene();
     mainScene.setBackground(new Background(50, 50, 50));
+
+    final FPSCounter fpsCounter = new FPSCounter();
+    mEngine.registerUpdateHandler(fpsCounter);
+
+    final Text fpsText = new Text(250, 240, mFont, "FPS:0123456789",
+        this.getVertexBufferObjectManager());
+
+    mainScene.attachChild(fpsText);
+
+    mainScene.registerUpdateHandler(new TimerHandler(1 / 20.0f, true,
+        new ITimerCallback() {
+          @Override
+          public void onTimePassed(final TimerHandler pTimerHandler) {
+            fpsText.setText("FPS: " + fpsCounter.getFPS());
+          }
+    }));
   }
 
   private void initSplashScene() {
