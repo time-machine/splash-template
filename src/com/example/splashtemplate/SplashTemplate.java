@@ -155,6 +155,4 @@ public class SplashTemplate extends BaseGameActivity {
         (CAMERA_HEIGHT - splash.getHeight()) * 0.5f);
     splashScene.attachChild(splash);
   }
-
-
 }
