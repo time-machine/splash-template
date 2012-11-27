@@ -60,14 +60,14 @@ public class SplashTemplate extends BaseGameActivity {
   public void onCreateResources(
       OnCreateResourcesCallback pOnCreateResourcesCallback) throws Exception {
     BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-    splashTextureAtlas = new BitmapTextureAtlas(this.getTextureManager(), 256,
+    splashTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 256,
         256, TextureOptions.DEFAULT);
     splashTextureRegion = BitmapTextureAtlasTextureRegionFactory
         .createFromAsset(splashTextureAtlas, this, "splash.png", 0, 0);
     splashTextureAtlas.load();
 
-    mFont = FontFactory.create(this.getFontManager(), this.getTextureManager(),
-        256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32);
+    mFont = FontFactory.create(getFontManager(), getTextureManager(), 256, 256,
+        Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32);
     mFont.load();
 
     pOnCreateResourcesCallback.onCreateResourcesFinished();
@@ -77,7 +77,7 @@ public class SplashTemplate extends BaseGameActivity {
   public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback)
       throws Exception {
     initSplashScene();
-    pOnCreateSceneCallback.onCreateSceneFinished(this.splashScene);
+    pOnCreateSceneCallback.onCreateSceneFinished(splashScene);
   }
 
   @Override
